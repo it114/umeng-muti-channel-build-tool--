@@ -20,7 +20,7 @@ namespace UmengChannel
 		//project directory
 		public const string projects_path = "projects";
 		public const string general_setting = "sys.cfg";
-		
+		 
 		public string java_home {get;set;}
 		public string android_home {get;set;}
 		public string ant_home {get;set;}
@@ -358,6 +358,26 @@ namespace UmengChannel
 		// tools path
 		
 		public List<string> channels {get;set;}
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////-------------------自定义属性-----------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+        ////////////////---------------------------------------/////////////////////////////////
+
+        //label即微云标签，例如：m.yyc
+        public String label { get; set; }
+        //打包的类型 
+        //** 
+        //** typeChangeLabelOnly 
+        //** typeChangeLabelOnly
+        //
+        public String decodeType { get; set; }
+        //文件夹下面的所有的APK列表路径
+        public String [] apks { get; set; }
+        
 
 		public ProjectConfigration()
 		{

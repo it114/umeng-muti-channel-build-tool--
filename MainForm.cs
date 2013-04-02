@@ -14,8 +14,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.IO;
 
-using UmengChannel.analytics;
-
+ 
 namespace UmengChannel
 {
 	/// <summary>
@@ -28,7 +27,7 @@ namespace UmengChannel
 		//private string currentProject = null;
 
         // A simple analytics sdk for windows form 
-        MobclickAgent agent = MobclickAgent.Instance();
+        //MobclickAgent agent = MobclickAgent.Instance();
 
 		public MainForm()
 		{
@@ -47,7 +46,7 @@ namespace UmengChannel
 			
 			initBackgroundWorker();
 
-            agent.StartNewSession("50596b7c52701557f6000157", "official");
+           // agent.StartNewSession("50596b7c52701557f6000157", "official");
     
 		}
 		//set backgroundworker for background task!
@@ -76,14 +75,14 @@ namespace UmengChannel
 		    	sb.Append("查看 /log/i.txt 详细错误信息");
 		    	MessageBox.Show(sb.ToString());
                 
-                agent.OnEvent("build", "fail");
+                //agent.OnEvent("build", "fail");
 		    }
 		
 		    else
 		    {
-		    	MessageBox.Show( "渠道打包完成" );
+		    	MessageBox.Show( "打包完成" );
                 
-                agent.OnEvent("build", "success");
+                //agent.OnEvent("build", "success");
 		    }
 		}
 		
@@ -118,7 +117,6 @@ namespace UmengChannel
 		}
 		//project -> view
 		private void bindProjectConfig(){
-
 			//if(this)
 			this.tb_project.DataBindings.Clear();
 			this.tb_project.DataBindings.Add("Text", project,"project_path",false,DataSourceUpdateMode.OnPropertyChanged);
@@ -139,7 +137,7 @@ namespace UmengChannel
 		//view to object
 		private void setOrUpdateConfig(){
 			string project_name = System.IO.Path.GetFileName( this.tb_project.Text );
-	
+	        
 			ProjectConfigration config = Configration.Instanse().getOrCreateProject(project_name);
 			config.project_path = this.tb_project.Text;
 			config.keystore_file_path = this.tb_keystore.Text;
@@ -169,22 +167,44 @@ namespace UmengChannel
 		//generate apk
 		void Button3Click(object sender, EventArgs e)
 		{
-			//loadConfig();
-			if( !isEnviromentReady(project) ){
-				return;
-			}
-			
-			if( bw.IsBusy ){
-				MessageBox.Show("正在打包，稍后再试");
-				return;
-			}
-			
-			progressBar1.Visible = true;
-			
-			bw.RunWorkerAsync();
+            String label = tbChangeLabelonlyValue.Text.ToString().Trim();
 
-            agent.OnEvent("build", "start");
+
+            if ("" != label)
+            {
+                project.decodeType = "typeChangeLabelOnly";
+                project.label = label;
+                project.project_path = "SweetDrink.apk";
+                if (project.apks == null || project.apks.Length == 0)
+                {
+                    MessageBox.Show("请选择APK");
+                    return ;
+                }
+                
+                startPackge();
+            }
+            
+            else
+            {
+                MessageBox.Show("请填写标签");
+                return;
+            }
 		}
+
+        private void startPackge(){
+            //loadConfig();
+            if (!isEnviromentReady(project))
+            {
+                return;
+            }
+            if (bw.IsBusy)
+            {
+                MessageBox.Show("正在打包，稍后再试");
+                return;
+            }
+            progressBar1.Visible = true;
+            bw.RunWorkerAsync();
+        }
 		
 		private void doWork(object sender, DoWorkEventArgs e){
 			try{
@@ -262,7 +282,7 @@ namespace UmengChannel
 			
 			openFileDialog1.DefaultExt = "keystore";
         	openFileDialog1.Filter = "keystore files (*.*)|*.*";
-        	
+            
         	if( openFileDialog1.ShowDialog() == DialogResult.OK)
         	{
         		this.tb_keystore.Text = openFileDialog1.FileName;
@@ -322,7 +342,7 @@ namespace UmengChannel
 			refreshProjects();
 			bindProjectConfig();
 
-            agent.OnEvent("build", "new_project");
+            //agent.OnEvent("build", "new_project");
 		}
 	
 		private void Application_ApplicationExit(object sender, EventArgs e) {
@@ -330,43 +350,44 @@ namespace UmengChannel
 				Configration.Instanse().saveProjects();
 				Configration.Instanse().saveSysConfig();
 
-                agent.EndSession();
+                //agent.EndSession();
 		    } catch {}
 		}
 		
 		public bool isEnviromentReady(ProjectConfigration project){
 			string error = null;
-			if(project.project_path == null){
-				Log.e("Please set the project path");
-				error = "工程目录没有设置";
-			
-			}
-
-            if (project.isApkProject)
+            if (project.project_path == null)
             {
-                if (!File.Exists(project.project_path))
-                {
-                    Log.e("input apk doesn't exit");
-                    error = "指定 APK 文件不存在";
-                }
-                else
-                {
-                    Log.i("Target apk is OK ... ");
-                }
-            }
-            else
-            {
-                if (!Directory.Exists(project.project_path))
-                {
-                    Log.e("The input project path does't exit");
-                    error = "工程目录不存在";
+                Log.e("Please set the project path");
+                error = "工程目录没有设置";
 
-                }
-                else
-                {
-                    Log.i("Target project is OK ... ");
-                }
             }
+
+            //if (project.isApkProject)
+            //{
+            //    if (!File.Exists(project.project_path))
+            //    {
+            //        Log.e("input apk doesn't exit");
+            //        error = "指定 APK 文件不存在";
+            //    }
+            //    else
+            //    {
+            //        Log.i("Target apk is OK ... ");
+            //    }
+            //}
+            //else
+            //{
+            //    if (!directory.exists(project.project_path))
+            //    {
+            //        log.e("the input project path does't exit");
+            //        error = "工程目录不存在";
+
+            //    }
+            //    else
+            //    {
+            //        log.i("target project is ok ... ");
+            //    }
+            //}
 			
 			if(project.keystore_file_path == null){
 				Log.e("Please set the keystore file path");
@@ -399,11 +420,11 @@ namespace UmengChannel
 				
 			}
 			
-			if(project.channels == null || project.channels.Count <=0){
-				error = "渠道没有设置";
-				Log.w("Please input channels !");
+            //if(project.channels == null || project.channels.Count <=0){
+            //    error = "渠道没有设置";
+            //    Log.w("Please input channels !");
 				
-			}
+            //}
 
 			
 			if(string.IsNullOrEmpty(Configration.Instanse().java_home))
@@ -451,12 +472,59 @@ namespace UmengChannel
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
             openFileDialog1.DefaultExt = "apk";
-            openFileDialog1.Filter = "apk files (*.apk)|*.APK";
+            openFileDialog1.Filter = "所有文件 (*.apk)|*.APK";
+            openFileDialog1.Multiselect = true;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                OnGenerateProject( openFileDialog1.FileName );
+                  String [] apks = openFileDialog1.FileNames;
+                  bool isAllApks = true;
+                  foreach (String apk in apks)
+                  {
+                      if(!apk.ToLower().EndsWith(".apk"))
+                      {
+                          isAllApks = false;
+                          break;
+                      }
+ 
+                  }
+                  
+                  if (isAllApks)
+                  {
+                      string project_name = System.IO.Path.GetFileName("C:\\Users\\Mes6\\Desktop\\渠道打包工具开发\\SweetDrink.apk");
+                      ProjectConfigration config = Configration.Instanse().getOrCreateProject(project_name);
+                      config.project_path = project_name;// this.tb_project.Text;
+                      config.keystore_file_path = this.tb_keystore.Text;
+                      config.keystore_pw = this.tb_keystore_pw.Text;
+                      config.key_pw = this.tb_key_pw.Text;
+                      config.alias = this.tb_alias.Text;
+
+                      project.apks = apks;
+                      project.isApkProject = true;
+                      bindProjectConfig();
+                  }
+                  else
+                  {
+                      MessageBox.Show("你的选择中有非APK文件，请重新选择");
+                      return;
+                  }
+
             }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            
         }
 	}
 }

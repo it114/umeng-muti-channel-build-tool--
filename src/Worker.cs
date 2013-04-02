@@ -40,28 +40,35 @@ namespace UmengChannel
 		
 		public static void start(){
 			worker.run();
-			
 		}
+
 		private void run(){
 			
 			if( project.isApkProject )
             {
-				doWorkFromApk();
-			}else
-            {
-				try{
-					backup();
-					doWorkFromSource();
-				}catch(XException xex){
-					throw xex;
-				}catch(Exception ex){
-					throw ex;
-				}finally{
-					restore();
-				}
+                if ("typeChangeLabelOnly" == project.decodeType)
+                {
+                    doWorkFromApkChangeLabelOnly();
+                }
+				//doWorkFromApk();
 			}
+            //else
+            //{
+            //    try{
+            //        backup();
+            //        doWorkFromSource();
+            //    }catch(XException xex){
+            //        throw xex;
+            //    }catch(Exception ex){
+            //        throw ex;
+            //    }finally{
+            //        restore();
+            //    }
+            //}
 			
 		}
+
+        
 		
 		
 		private  string [] srcs  = {"AndroidManifest.xml" ,"ant.properties", "build.xml", "project.properties"};
@@ -117,6 +124,33 @@ namespace UmengChannel
 			}
 		}
 
+        private void doWorkFromApkChangeLabelOnly()
+        {
+            int progress = 0;
+            int total = project.apks.Length * 3 + 1;
+            publishProgress(0, project.apks.Length);
+            for (int i = 0; i < project.apks.Length; i++)
+            {
+                String apk = project.apks[i];
+                decodeApk(apk);
+                clean();
+                publishProgress(progress++, total);
+                //替换标签
+                //
+                replaceLabelOnly(project.label); 
+
+                publishProgress(progress++, total);
+                rebuildApk();
+
+                publishProgress(progress++, total);
+                signAPK();
+                zipAlign();
+
+                copyToWorkspace("re_gen_"+apk.Substring(apk.LastIndexOf(".")+1));
+            }
+        }
+
+
         //apktool d --no-src  -f DkReader_1.7.0.1671.apk dk
         private void doWorkFromApk()
         {
@@ -165,6 +199,25 @@ namespace UmengChannel
             cmd.Add(string.Format("\"{0}\"", project.ApkDecodeFolder));
 
             Sys.Run( ToCommand(cmd) );
+        }
+
+        //按照路径来
+        private void decodeApk(String apkPath)
+        {
+            if (!File.Exists(apkPath))
+            {
+                throw new XException("Target apk is missing..");
+            }
+
+            List<String> cmd = new List<string>();
+            cmd.Add("apktool");
+            cmd.Add("d");
+            cmd.Add("--no-src");
+            cmd.Add("-f");
+            cmd.Add(string.Format("\"{0}\"", apkPath));
+            cmd.Add(string.Format("\"{0}\"", project.ApkDecodeFolder));
+
+            Sys.Run(ToCommand(cmd));
         }
         
         private void rebuildApk(){
@@ -236,9 +289,9 @@ namespace UmengChannel
         	cmd.Add( "jarsigner" );
         	cmd.Add( "-keystore" );
         	cmd.Add( string.Format("\"{0}\"", project.keystore_file_path ));
-        	cmd.Add( "-storepass" );
+        	cmd.Add( "-storepass");
         	cmd.Add( project.keystore_pw );
-        	cmd.Add( "-keypass" );
+        	cmd.Add( "-keypass");
         	cmd.Add( project.key_pw );
         	cmd.Add( "-signedjar" );
         	cmd.Add( string.Format("\"{0}\"", project.UnzipalignApkFile ));
@@ -285,7 +338,65 @@ namespace UmengChannel
 			
 			Log.i("...");
 		}
-		
+
+
+        private void replaceLabelOnly(string channel)
+        {
+            Log.i("Add or replcae replaceLabelOnly");
+
+            string androidmanifest_file = project.AndroidManifestFile;
+
+            if (!File.Exists(androidmanifest_file))
+            {
+                throw new Exception(string.Format("Can't find AndroidManifest.xml file in the {0}", androidmanifest_file));
+            }
+                
+            XmlDocument doc = new XmlDocument();
+            doc.Load(androidmanifest_file);
+
+            //update 
+            XmlNodeList mata_datas = doc.GetElementsByTagName("meta-data");
+            bool hasSet = false;
+            foreach (XmlElement mata_data in mata_datas)
+            {
+                String meta_name = mata_data.GetAttribute("android:name");
+                if (meta_name.Equals("TD_CHANNEL_ID") || meta_name.EndsWith("UMENG_CHANNEL") || meta_name.EndsWith("com.wiyun.sdk.channel"))
+                {
+                    mata_data.SetAttribute("android:value", channel);
+                    hasSet = true;
+                    break;
+                }
+            }
+
+            // if no set ,add it
+            if (!hasSet)
+            {
+                XmlElement application = doc.GetElementsByTagName("application")[0] as XmlElement;
+
+                XmlElement channel_mata = doc.CreateElement("meta-data");
+                channel_mata.SetAttribute("android:name", "UMENG_CHANNEL");
+                channel_mata.SetAttribute("android:value", channel);
+
+                application.AppendChild(channel_mata);
+
+                 XmlElement td_channel__mata = doc.CreateElement("meta-data");
+                td_channel__mata.SetAttribute("android:name", "TD_CHANNEL_ID");
+                td_channel__mata.SetAttribute("android:value", channel);
+
+                application.AppendChild(td_channel__mata);
+
+                 XmlElement weiyun_mata = doc.CreateElement("meta-data");
+                weiyun_mata.SetAttribute("android:name", "com.wiyun.sdk.channel");
+                weiyun_mata.SetAttribute("android:value", channel);
+
+                application.AppendChild(weiyun_mata);
+            }
+
+            doc.Save(androidmanifest_file);
+
+            Log.i("...");
+        }
+
 		private void replaceChannle(string channel){
 			Log.i("Add or replcae channle");
 
