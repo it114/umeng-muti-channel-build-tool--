@@ -35,5 +35,25 @@ namespace UmengChannel
             }
            
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            bool isShow = false;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f is AllChangeLabel)
+                {
+                    isShow = true;
+                    f.BringToFront();
+                    f.Focus();
+                }
+            }
+            if (!isShow)
+            {
+                AllChangeLabel changeLabel = new AllChangeLabel();
+                changeLabel.Show();
+            }
+
+        }
     }
 }

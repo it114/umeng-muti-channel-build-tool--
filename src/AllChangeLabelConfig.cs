@@ -8,9 +8,9 @@ using System.Xml.Serialization;
 
 namespace UmengChannel
 {
-   public  class ChangeLabelOnlyConfig
+   public  class AllChangeLabelConfig
     {
-        private static ChangeLabelOnlyConfig config;
+        private static AllChangeLabelConfig config;
 
         public String ant_home{get;set;}
         public String apktool_home { get; set; }
@@ -23,11 +23,16 @@ namespace UmengChannel
         public string key_pw { get; set; }
         public string alias { get; set; }
 
+        public String umengkey { get; set; }
+
+        public String talkingKey { get; set; }
+
         public String labelName { get; set; }
 
         public String pro_path { get; set; }
 
-        public ChangeLabelOnlyConfig() {
+        public AllChangeLabelConfig()
+        {
 
             ant_home = System.IO.Path.Combine(System.Environment.CurrentDirectory, Path.Combine("tools", "ant"));
             apktool_home = Path.Combine(System.Environment.CurrentDirectory, Path.Combine("tools", "apktool"));
@@ -38,14 +43,14 @@ namespace UmengChannel
             }
         }
 
-        public static ChangeLabelOnlyConfig getInstance()
+        public static AllChangeLabelConfig getInstance()
         {
             if (config == null)
             {
-                ChangeLabelOnlyConfig c = readSettingFromFile();
+                AllChangeLabelConfig c = readSettingFromFile();
                 if (c == null)
                 {
-                    config = new ChangeLabelOnlyConfig();
+                    config = new AllChangeLabelConfig();
                 }
                 else
                 {
@@ -124,11 +129,11 @@ namespace UmengChannel
 
         public   void writeSettintToFile()
         {
-            string settingPath = System.IO.Path.Combine(System.Environment.CurrentDirectory, "settings_1.xml");// Utils.generateSettingFileName(projectName));
+            string settingPath = System.IO.Path.Combine(System.Environment.CurrentDirectory, "settings_2.xml");// Utils.generateSettingFileName(projectName));
 
             if (File.Exists(settingPath)) File.Delete(settingPath);
 
-            XmlSerializer xs = new XmlSerializer(typeof(ChangeLabelOnlyConfig));
+            XmlSerializer xs = new XmlSerializer(typeof(AllChangeLabelConfig));
             Stream stream = new FileStream(settingPath, FileMode.Create, FileAccess.Write, FileShare.Read);
             xs.Serialize(stream, this);
             stream.Close();
@@ -142,25 +147,25 @@ namespace UmengChannel
             //}
         }
 
-        public static ChangeLabelOnlyConfig readSettingFromFile()
+        public static AllChangeLabelConfig readSettingFromFile()
         {
-            string settingPath = System.IO.Path.Combine(System.Environment.CurrentDirectory, "settings_1.xml");// Utils.generateSettingFileName(projectName));
+            string settingPath = System.IO.Path.Combine(System.Environment.CurrentDirectory, "settings_2.xml");// Utils.generateSettingFileName(projectName));
 
             if (!File.Exists(settingPath))
             {
                 return null;
             }
-            ChangeLabelOnlyConfig c = null;
+            AllChangeLabelConfig c = null;
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(ChangeLabelOnlyConfig));
+                XmlSerializer xs = new XmlSerializer(typeof(AllChangeLabelConfig));
                 Stream stream = new FileStream(settingPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                c = xs.Deserialize(stream) as ChangeLabelOnlyConfig;
+                c = xs.Deserialize(stream) as AllChangeLabelConfig;
                 stream.Close();
                 //using (FileStream fs = new FileStream(settingPath, FileMode.Open))
                 //{
                 //    BinaryFormatter formatter = new BinaryFormatter();
-                //    c = (ChangeLabelOnlyConfig)formatter.Deserialize(fs);
+                //    c = (AllChangeLabelConfig)formatter.Deserialize(fs);
                       
                 //}
             }

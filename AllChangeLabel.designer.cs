@@ -1,6 +1,6 @@
 ﻿namespace UmengChannel
 {
-    partial class ChangeLabelOnly
+    partial class AllChangeLabel
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeLabelOnly));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AllChangeLabel));
             this.label10 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.button2 = new System.Windows.Forms.Button();
@@ -51,6 +51,11 @@
             this.tb_key_pw = new System.Windows.Forms.TextBox();
             this.bt_keystore_path = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tb_tdkey = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tb_umengkey = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -89,7 +94,7 @@
             this.button2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.Location = new System.Drawing.Point(653, 27);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(157, 25);
+            this.button2.Size = new System.Drawing.Size(125, 25);
             this.button2.TabIndex = 40;
             this.button2.Text = "查看生成的APK";
             this.button2.UseVisualStyleBackColor = true;
@@ -288,6 +293,11 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label7);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Controls.Add(this.tb_tdkey);
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.tb_umengkey);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.textBox2);
             this.groupBox4.Controls.Add(this.textBox1);
@@ -298,11 +308,58 @@
             this.groupBox4.Controls.Add(this.button4);
             this.groupBox4.Location = new System.Drawing.Point(15, 343);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(795, 124);
+            this.groupBox4.Size = new System.Drawing.Size(795, 216);
             this.groupBox4.TabIndex = 44;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "标签";
             this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
+            // 
+            // label7
+            // 
+            this.label7.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.ForeColor = System.Drawing.Color.Green;
+            this.label7.Location = new System.Drawing.Point(333, 166);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(95, 25);
+            this.label7.TabIndex = 49;
+            this.label7.Text = "Talking data ~";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(6, 166);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 25);
+            this.label6.TabIndex = 47;
+            this.label6.Text = "TD AppKey：";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tb_tdkey
+            // 
+            this.tb_tdkey.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tb_tdkey.Location = new System.Drawing.Point(121, 163);
+            this.tb_tdkey.Name = "tb_tdkey";
+            this.tb_tdkey.Size = new System.Drawing.Size(206, 23);
+            this.tb_tdkey.TabIndex = 48;
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(3, 126);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(95, 25);
+            this.label2.TabIndex = 45;
+            this.label2.Text = "友盟AppKey：";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tb_umengkey
+            // 
+            this.tb_umengkey.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.tb_umengkey.Location = new System.Drawing.Point(118, 123);
+            this.tb_umengkey.Name = "tb_umengkey";
+            this.tb_umengkey.Size = new System.Drawing.Size(206, 23);
+            this.tb_umengkey.TabIndex = 46;
             // 
             // label1
             // 
@@ -317,7 +374,7 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(93, 79);
+            this.textBox2.Location = new System.Drawing.Point(118, 79);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(206, 23);
             this.textBox2.TabIndex = 44;
@@ -383,7 +440,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button3.Location = new System.Drawing.Point(339, 473);
+            this.button3.Location = new System.Drawing.Point(310, 565);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(133, 39);
             this.button3.TabIndex = 38;
@@ -391,11 +448,11 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // ChangeLabelOnly
+            // AllChangeLabel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(829, 524);
+            this.ClientSize = new System.Drawing.Size(829, 610);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label10);
@@ -404,9 +461,9 @@
             this.Controls.Add(this.button2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "ChangeLabelOnly";
+            this.Name = "AllChangeLabel";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "只改变标签";
+            this.Text = "改变友盟、统计、标签";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -451,5 +508,10 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tb_tdkey;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox tb_umengkey;
     }
 }

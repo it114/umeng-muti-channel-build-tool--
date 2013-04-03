@@ -10,11 +10,11 @@ using UmengChannel.src;
 
 namespace UmengChannel
 {
-    public partial class ChangeLabelOnly : Form
+    public partial class AllChangeLabel : Form
     {
         BackgroundWorker bw = new BackgroundWorker();
 
-        public ChangeLabelOnly()
+        public AllChangeLabel()
         {
             InitializeComponent();
             initBackgroundWorker();
@@ -24,7 +24,7 @@ namespace UmengChannel
 
         private void loadConfig()
         {
-            ChangeLabelOnlyConfig c = ChangeLabelOnlyConfig.getInstance();
+            AllChangeLabelConfig c = AllChangeLabelConfig.getInstance();
             if (c != null)
             {
                 this.tb_alias.Text = c.alias;
@@ -33,6 +33,9 @@ namespace UmengChannel
                 this.tb_key_pw.Text = c.key_pw;
                 this.tb_keystore.Text = c.keystore_file_path;
                 this.tb_keystore_pw.Text = c.keystore_pw;
+                
+                this.tb_umengkey.Text = c.umengkey;
+                this.tb_tdkey.Text = c.talkingKey;
             }
         }
 
@@ -44,20 +47,37 @@ namespace UmengChannel
                 return;
             }
 
-          
-            ChangeLabelOnlyConfig.getInstance().labelName = this.textBox2.Text.Trim();
+            if (string.IsNullOrEmpty(this.tb_tdkey.Text.Trim()) || string.IsNullOrEmpty(this.tb_umengkey.Text.Trim()))
+            {
+                MessageBox.Show("信息填写不完整");
+                return;
+            }
+
+
+
+            
+            AllChangeLabelConfig.getInstance().labelName = this.textBox2.Text.Trim();
 
             //package
-            ChangeLabelOnlyConfig.getInstance().key_pw = tb_key_pw.Text.Trim();
-            ChangeLabelOnlyConfig.getInstance().keystore_pw = tb_keystore_pw.Text.Trim();
-            ChangeLabelOnlyConfig.getInstance().alias = tb_alias.Text.Trim();
-            ChangeLabelOnlyConfig.getInstance().setEnvironment();
-            progressBar1.Visible = true;
+            AllChangeLabelConfig.getInstance().key_pw = tb_key_pw.Text.Trim();
+            AllChangeLabelConfig.getInstance().keystore_pw = tb_keystore_pw.Text.Trim();
+            AllChangeLabelConfig.getInstance().alias = tb_alias.Text.Trim();
+            AllChangeLabelConfig.getInstance().java_home = tb_java_path.Text.Trim();
+            AllChangeLabelConfig.getInstance().android_home = tb_android_sdk_path.Text.Trim();
 
-            ChangeLabelOnlyConfig.getInstance().writeSettintToFile();
+
+
+            AllChangeLabelConfig.getInstance().talkingKey = tb_tdkey.Text.Trim();
+            AllChangeLabelConfig.getInstance().umengkey = tb_umengkey.Text.Trim();
+
+            AllChangeLabelConfig.getInstance().setEnvironment();
+            progressBar1.Visible = true;
+            AllChangeLabelConfig.getInstance().writeSettintToFile();
 
             bw.RunWorkerAsync();
 
+
+           
 
         }
 
@@ -92,7 +112,7 @@ namespace UmengChannel
             }
             else
             {
-               // ChangeLabelOnlyConfig.getInstance().writeSettintToFile();
+                // AllChangeLabelConfig.getInstance().writeSettintToFile();
                 MessageBox.Show("渠道打包完成");
             }
         }
@@ -109,8 +129,8 @@ namespace UmengChannel
             try
             {
                 BackgroundWorker worker = sender as BackgroundWorker;
-                ChangeLabelOnlyWorker.setBackgroundWorker(worker);
-                ChangeLabelOnlyWorker.start();
+                AllChangeLabelWorker.setBackgroundWorker(worker);
+                AllChangeLabelWorker.start();
             }
             catch (Exception ex)
             {
@@ -144,7 +164,7 @@ namespace UmengChannel
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.tb_keystore.Text = openFileDialog1.FileName;
-                ChangeLabelOnlyConfig.getInstance().keystore_file_path = this.tb_keystore.Text.Trim();
+                AllChangeLabelConfig.getInstance().keystore_file_path = this.tb_keystore.Text.Trim();
             }
         }
 
@@ -158,7 +178,7 @@ namespace UmengChannel
                 if (Utils.isValidJavaSDKPath(path = folderBrowserDialog1.SelectedPath))
                 {
                     this.tb_java_path.Text = path;
-                    ChangeLabelOnlyConfig.getInstance().java_home = path;
+                    AllChangeLabelConfig.getInstance().java_home = path;
                 }
                 else
                 {
@@ -177,7 +197,7 @@ namespace UmengChannel
                 if (Utils.isValidAndroidSDKPath(path = folderBrowserDialog1.SelectedPath))
                 {
                     this.tb_android_sdk_path.Text = path;
-                    ChangeLabelOnlyConfig.getInstance().android_home = path;
+                    AllChangeLabelConfig.getInstance().android_home = path;
                 }
                 else
                 {
@@ -210,7 +230,7 @@ namespace UmengChannel
 
                 if (isAllApks)
                 {
-                    ChangeLabelOnlyConfig.getInstance().apks = apks;
+                    AllChangeLabelConfig.getInstance().apks = apks;
                     this.textBox1.Text = openFileDialog1.FileNames[0].Substring(0, openFileDialog1.FileNames[0].LastIndexOf("\\"));
                     
                 }
@@ -230,7 +250,7 @@ namespace UmengChannel
 
         private void button2_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("explorer.exe", ChangeLabelOnlyConfig.getInstance().outputFolder);
+            System.Diagnostics.Process.Start("explorer.exe", AllChangeLabelConfig.getInstance().outputFolder);
         }
 
     }
